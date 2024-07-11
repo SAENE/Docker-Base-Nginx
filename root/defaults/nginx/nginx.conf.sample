@@ -32,7 +32,7 @@ http {
     default_type application/octet-stream;
 
     # 配置DNS服务器
-    include /config/nginx/resolver.conf;
+    include /config/nginx/include/base_config/resolver.conf;
 
     # 不要告诉客户端 nginx 版本。默认为“打开”。
     server_tokens off;

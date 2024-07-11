@@ -139,11 +139,11 @@ RUN \
     /etc/periodic/daily/logrotate
 
 # set version label
-ARG BUILD_DATE
-ARG VERSION
+ARG BUILD_DATE=2024.7.11
+ARG VERSION=1.26.1
 ARG NGINX_VERSION
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="nemchik"
+LABEL build_version="MAENE version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="MAENE"
 
 # install packages
 RUN \
