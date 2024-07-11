@@ -1,0 +1,14 @@
+# 本配置为反代理配置模版
+
+server {
+	set $forward_scheme https;
+	set $server         "";
+	set $port           443;
+	server_name      	example.com;
+
+	access_log /config/log/weblog/example-access.log;
+	error_log /config/log/weblog/example-error.log;
+
+	include /config/nginx/include/base_config/update_limit.conf;
+	include /config/nginx/include/default_config/default_proxy.conf;
+}

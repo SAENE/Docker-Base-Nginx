@@ -1,0 +1,88 @@
+# 本配置为Nginx根配置
+
+# 设置使用用户
+user abc;
+
+# 根据CPU核心数自动设置工作进程数。
+include /config/nginx/worker_processes.conf;
+
+# 允许对正则表达式使用 JIT 以加快其处理速度
+pcre_jit on;
+
+# 配置错误日志
+error_log /config/log/nginx/error.log;
+
+# 加载动态模块
+include /etc/nginx/modules/*.conf;
+include /config/nginx/load-modules/*.conf;
+
+events {
+    # 可以同时打开的最大连接数一个工作进程
+    worker_connections 1024;
+}
+
+# Stream流
+stream {
+    include /config/nginx/stream/*.conf;
+}
+
+http {
+    # 包括文件扩展名到响应的 MIME 类型的映射并定义默认类型
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # 配置DNS服务器
+    include /config/nginx/resolver.conf;
+
+    # 不要告诉客户端 nginx 版本。默认为“打开”。
+    server_tokens off;
+
+    # 配置访问日志
+    access_log /config/log/nginx/access.log;
+    
+    # 配置可接受的客户端请求的最大正文大小
+    # 由请求头Content-Length指示。如果规定的内容长度大于这个大小，则客户端接收到HTTP误代码 413。
+    # 设置为 0 禁用。默认值为“1m”
+    client_max_body_size 0;
+    server_names_hash_bucket_size 1024;
+    keepalive_timeout  65;
+
+    # Sendfile 从内核内部在一个 FD 和另一个 FD 之间复制数据，这比 read() + write() 更高效。默认关闭。
+    sendfile on;
+
+    # 使 nginx 尝试在一个数据包中发送其 HTTP 响应头，而不是使用部分框架。默认为“关闭”。
+    tcp_nopush on;
+
+    # 缓存设置（名称pximg）
+    proxy_cache_path /config/cache levels=1:2 keys_zone=pximg:10m max_size=10g inactive=7d use_temp_path=off;
+
+    # 配置压缩设置
+    include /config/nginx/include/base_config/compose.conf;
+
+    # 用于代理 websocket 的辅助变量。
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+	
+	# 禁止端口重定向
+    port_in_redirect off;
+    # 开启相对URL路径
+    absolute_redirect off;
+
+    # WAF设置
+    include /config/nginx/include/base_config/waf_server.conf;
+
+    # 配置允许跨域列表
+    map $http_origin $allow_host {
+        "~^https://(.*)exmaple\.com.*$" 'https://$1exmaple.com';
+        default 0;
+    }
+
+    # Includes virtual hosts configs.
+    include /etc/nginx/http.d/*.conf;
+    include /config/nginx/site-confs/*.conf;
+}
+
+daemon off;
+pid /run/nginx.pid;

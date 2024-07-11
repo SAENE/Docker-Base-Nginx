@@ -1,0 +1,17 @@
+/config/log/weblog/*.log {
+	daily
+        issingok
+        dateext
+        dateformat -%m月-%d日
+        olddir backup
+        rotate 14
+        compress
+        delaycompress
+        notifempty
+        missingok
+        sharedscripts
+        postrotate
+                s6-svc -1 /run/service/svc-nginx
+        endscript
+	su abc abc
+}
