@@ -139,9 +139,10 @@ RUN \
     /etc/periodic/daily/logrotate
 
 # set version label
-ARG BUILD_DATE=2024.7.11
+ARG BUILD_DATE=2024-07-11
 ARG VERSION=1.26.1
 ARG NGINX_VERSION
+ENV preconfigured=enable
 LABEL build_version="MAENE version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="MAENE"
 
