@@ -139,8 +139,8 @@ RUN \
     /etc/periodic/daily/logrotate
 
 # set version label
-ARG BUILD_DATE=2024-07-11
-ARG VERSION=1.26.1
+ARG BUILD_DATE
+ARG VERSION
 ARG NGINX_VERSION
 ENV preconfigured=enable
 LABEL build_version="MAENE version:- ${VERSION} Build-date:- ${BUILD_DATE}"
@@ -176,7 +176,7 @@ RUN \
     nginx-mod-http-naxsi==${NGINX_VERSION} \
     nginx-mod-http-zstd==${NGINX_VERSION} \
     nginx-vim==${NGINX_VERSION} && \
-    printf "Linuxserver.io version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
+    printf "MAENE version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
     rm -f /etc/nginx/conf.d/stream.conf
 
 # add local files
